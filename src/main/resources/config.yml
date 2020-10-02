@@ -1,10 +1,6 @@
-days: 0
-hours: 0
-minutes: 10
-
 mysql:
   host: localhost
   port: 3306
   user: root
-  pass: mk871396
+  pass: pass
   db: man10raiddatabase
