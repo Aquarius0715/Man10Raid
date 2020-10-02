@@ -25,6 +25,14 @@ class Commands(private val plugin: Man10Raid): CommandExecutor {
 
                 0 -> {
 
+                    if (!sender.hasPermission("mraid.default")) {
+
+                        sender.sendMessage("${plugin.prefix} ${ChatColor.RED}あなたはこのコマンドを実行する権限がありません。")
+
+                        return true
+
+                    }
+
                     if (plugin.pluginStats) {
 
                         sender.sendMessage("${plugin.prefix} Man10RaidPluginは ${ChatColor.GREEN}${ChatColor.BOLD}有効 ${ChatColor.WHITE}${ChatColor.BOLD}です。")
@@ -48,6 +56,14 @@ class Commands(private val plugin: Man10Raid): CommandExecutor {
                     when (args[0]) {
 
                         "help" -> {
+
+                            if (!sender.hasPermission("mraid.default")) {
+
+                                sender.sendMessage("${plugin.prefix} ${ChatColor.RED}あなたはこのコマンドを実行する権限がありません。")
+
+                                return true
+
+                            }
 
                             showHelp(1, sender)
 
@@ -82,6 +98,14 @@ class Commands(private val plugin: Man10Raid): CommandExecutor {
                         }
 
                         "sb" -> {
+
+                            if (!sender.hasPermission("mraid.default")) {
+
+                                sender.sendMessage("${plugin.prefix} ${ChatColor.RED}あなたはこのコマンドを実行する権限がありません。")
+
+                                return true
+
+                            }
 
                             if (!plugin.pluginStats) {
 

@@ -183,13 +183,13 @@ class MySQLManager(private val plugin: Man10Raid, private val conName: String) {
                 "StartDate VARCHAR(19)," +
                 "UUID VARCHAR(36)," +
                 "PlayerName VARCHAR(16)," +
-                "Count INT NOT NULL DEFAULT 1," +
+                "Count INT NOT NULL DEFAULT 0," +
                 "ScoreBoardStats BOOLEAN NOT NULL DEFAULT true);")
 
         execute("create table if not exists Man10RaidGameTable(" +
                 "Id int auto_increment not null primary key," +
                 "StartDate VARCHAR(19)," +
-                "Time int not null default 0," +
+                "Time int not null default 1," +
                 "SuccessEnd boolean not null default false);")
 
         execute("create table if not exists Man10RaidHistoryTable(" +

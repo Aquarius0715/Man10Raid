@@ -1,6 +1,7 @@
 package aquarius0715.man10raid
 
 import net.md_5.bungee.api.ChatColor
+import org.bukkit.Bukkit
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.player.PlayerJoinEvent
@@ -25,7 +26,8 @@ class Man10Raid : JavaPlugin(), Listener {
             "${ChatColor.LIGHT_PURPLE}${ChatColor.BOLD}M" +
             "${ChatColor.WHITE}${ChatColor.BOLD}a" +
             "${ChatColor.GREEN}${ChatColor.BOLD}n" +
-            "${ChatColor.WHITE}${ChatColor.BOLD}10]"
+            "${ChatColor.WHITE}${ChatColor.BOLD}10" +
+            "${ChatColor.AQUA}${ChatColor.BOLD}Raid]"
 
     val utils = Utils(this)
 
@@ -44,6 +46,20 @@ class Man10Raid : JavaPlugin(), Listener {
 
         scoreBoard.createScoreBoard()
         scoreBoard.updateScoreBoard()
+
+    }
+
+    override fun onDisable() {
+
+        Thread {
+
+            val sql1 = "UPDATE Man10RaidGameTable SET Time = $time WHERE StartDate = '${startDate}';"
+
+            sqlManager.execute(sql1)
+
+            sqlManager.close()
+
+        }.start()
 
     }
 

@@ -93,13 +93,17 @@ class RaidSystem(private val plugin: Man10Raid) {
 
         plugin.raidStats = false
 
-        val sql1 = "UPDATE Man10RaidGameTable SET Time = ${plugin.time} WHERE StartDate = '${plugin.startDate}';"
+        Thread {
 
-        plugin.sqlManager.execute(sql1)
+            val sql1 = "UPDATE Man10RaidGameTable SET Time = ${plugin.time} WHERE StartDate = '${plugin.startDate}';"
 
-        plugin.sqlManager.close()
+            plugin.sqlManager.execute(sql1)
 
-        Bukkit.broadcastMessage("${plugin.prefix} レイドが一時中断されました！")
+            plugin.sqlManager.close()
+
+            Bukkit.broadcastMessage("${plugin.prefix} レイドが一時中断されました！")
+
+        }.start()
 
     }
 
@@ -142,6 +146,8 @@ class RaidSystem(private val plugin: Man10Raid) {
                 plugin.time = time
 
                 plugin.startDate = startDate
+
+                getScore()
 
                 Bukkit.broadcastMessage("${plugin.prefix}レイドが再開されました！")
 
@@ -324,31 +330,45 @@ class RaidSystem(private val plugin: Man10Raid) {
 
         if (!plugin.sqlManager.sqlConnectSafely()) return
 
-        val sql3 = "SELECT PlayerName, Count FROM Man10RaidPlayerTable WHERE StartDate = '${plugin.startDate}' ORDER BY Count DESC LIMIT 10;"
+        Thread {
 
-        val resultSet2 = plugin.sqlManager.query(sql3)
+            val sql3 = "SELECT PlayerName, Count FROM Man10RaidPlayerTable WHERE StartDate = '${plugin.startDate}' ORDER BY Count DESC LIMIT 10;"
 
-        plugin.playerData.clear()
+            val resultSet2 = plugin.sqlManager.query(sql3)
 
-        while (resultSet2!!.next()) {
+            plugin.playerData.clear()
 
-            plugin.playerData.add(Man10Raid.PlayerData(playerName = resultSet2.getString("PlayerName"), score = resultSet2.getInt("Count")))
+            while (resultSet2!!.next()) {
 
-        }
+                val playerName: String = if (resultSet2.getString("PlayerName").length < 11) {
 
-        resultSet2.close()
+                    resultSet2.getString("PlayerName")
 
-        val sql4 = "SELECT SUM(Count) FROM Man10RaidPlayerTable WHERE StartDate = '${plugin.startDate}';"
+                } else {
 
-        val resultSet4 = plugin.sqlManager.query(sql4)
+                    resultSet2.getString("PlayerName").substring(0, 10)
 
-        resultSet4!!.next()
+                }
 
-        plugin.allScore = resultSet4.getInt("SUM(Count)")
+                plugin.playerData.add(Man10Raid.PlayerData(playerName = playerName, score = resultSet2.getInt("Count")))
 
-        resultSet4.close()
+            }
 
-        plugin.sqlManager.close()
+            resultSet2.close()
+
+            val sql4 = "SELECT SUM(Count) FROM Man10RaidPlayerTable WHERE StartDate = '${plugin.startDate}';"
+
+            val resultSet4 = plugin.sqlManager.query(sql4)
+
+            resultSet4!!.next()
+
+            plugin.allScore = resultSet4.getInt("SUM(Count)")
+
+            resultSet4.close()
+
+            plugin.sqlManager.close()
+
+        }.start()
 
     }
 
@@ -365,8 +385,8 @@ class RaidSystem(private val plugin: Man10Raid) {
 
             if (!resultSet!!.next()) {
 
-                val sql1 = "INSERT INTO Man10RaidPlayerTable (StartDate, UUID, PlayerName) " +
-                        "VALUE ('${plugin.startDate}', '${player.uniqueId}', '${player.name}');"
+                val sql1 = "INSERT INTO Man10RaidPlayerTable (StartDate, UUID, PlayerName, Count) " +
+                        "VALUE ('${plugin.startDate}', '${player.uniqueId}', '${player.name}', 0);"
 
                 plugin.sqlManager.execute(sql1)
 
