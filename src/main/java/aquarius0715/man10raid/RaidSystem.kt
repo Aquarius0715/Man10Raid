@@ -111,6 +111,28 @@ class RaidSystem(private val plugin: Man10Raid) {
 
         if (!plugin.sqlManager.sqlConnectSafely()) return
 
+        val remain = true
+
+        Thread {
+
+            val sql = "SELECT * FROM Man10RaidGameTable ORDER BY StartDate DESC LIMIT 1"
+
+            val resultSet = plugin.sqlManager.query(sql)
+
+            if (!resultSet!!.next()) {
+
+                player.sendMessage("${plugin.prefix} 前回のデータがSQLに存在しません。")
+
+            }
+
+            resultSet.close()
+
+            plugin.sqlManager.close()
+
+        }.start()
+
+        if (!remain) return
+
         var successEnd: Boolean
 
         var time: Int

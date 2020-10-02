@@ -27,7 +27,8 @@ class Man10Raid : JavaPlugin(), Listener {
             "${ChatColor.WHITE}${ChatColor.BOLD}a" +
             "${ChatColor.GREEN}${ChatColor.BOLD}n" +
             "${ChatColor.WHITE}${ChatColor.BOLD}10" +
-            "${ChatColor.AQUA}${ChatColor.BOLD}Raid]"
+            "${ChatColor.AQUA}${ChatColor.BOLD}Raid" +
+            "${ChatColor.WHITE}${ChatColor.BOLD}]"
 
     val utils = Utils(this)
 
