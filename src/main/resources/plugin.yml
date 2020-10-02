@@ -1,0 +1,6 @@
+name: Man10Raid
+version: ${project.version}
+main: aquarius0715.man10raid.Man10Raid
+api-version: 1.13
+commands:
+  mraid:
